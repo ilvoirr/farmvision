@@ -1,36 +1,93 @@
-import { roboto } from './fonts'
-import { Poppins } from 'next/font/google'
-import { Button } from "@/components/ui/button"
+"use client";
 
+// -------------------- Font and UI Imports --------------------
+import { roboto } from './fonts';
+import { Poppins } from 'next/font/google';
+import { Button } from "@/components/ui/button";
+
+// -------------------- React and Routing --------------------
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+// -------------------- Clerk Authentication Components --------------------
 import {
-  ClerkProvider,
   SignInButton,
   SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
-} from '@clerk/nextjs'
+} from '@clerk/nextjs';
 
-// Google font configuration
+// ============================================================
+//                    FONT CONFIGURATION
+// ============================================================
+
 const poppins = Poppins({
   weight: ['500', '600'],
   subsets: ['latin'],
-})
+});
 
-// --------------------
-// Main Home Page Component
-// --------------------
+// ============================================================
+//        REDIRECT LOGIC WHEN USER IS SIGNED IN (CLERK)
+// ============================================================
+
+function RedirectToApp({ router }: { router: ReturnType<typeof useRouter> }) {
+  useEffect(() => {
+    router.push("/apppage");
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+      script.onload = () => {
+        window.particlesJS.load('particles-js', '/polygon-particles.json', () => {
+          console.log('callback - particles.js config loaded');
+        });
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  return null;
+}
+
+// ============================================================
+//                      MAIN PAGE COMPONENT
+// ============================================================
+
 export default function HomePage() {
+  const router = useRouter();
+
+  // Initialize particles.js on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+      script.onload = () => {
+        window.particlesJS.load('particles-js', '/polygon-particles.json', () => {
+          console.log('callback - particles.js config loaded');
+        });
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
+
   return (
     <>
+      {/* ============================================================
+          REDIRECT IF USER IS ALREADY SIGNED IN
+      ============================================================ */}
+      <SignedIn>
+        <RedirectToApp router={router} />
+      </SignedIn>
 
-      {/* -------------------- Top Navigation Bar -------------------- */}
-      <div className="flex items-center h-[4.5vw] bg-gray-900 text-white px-8 shadow-sm">
-        
-        {/* ---------- Left Margin Spacer ---------- */}
+      {/* ============================================================
+          TOP NAVIGATION BAR
+      ============================================================ */}
+      <div className="flex items-center h-[4.5vw] bg-[#110f1c] text-white px-8 shadow-sm">
         <div className="w-[3vw]" />
 
-        {/* ---------- Logo Icon ---------- */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="44"
@@ -48,63 +105,52 @@ export default function HomePage() {
           <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" />
         </svg>
 
-        {/* ---------- Spacer between logo and title ---------- */}
         <div className="w-[1vw]" />
 
-        {/* ---------- Application Title ---------- */}
         <h1 className="text-[1.3vw] font-semibold tracking-tight text-white">
           Code Progress Bar
         </h1>
 
-        {/* ---------- Flexible Space to Push Buttons Right ---------- */}
         <div className="w-[65vw]" />
 
-        {/* ---------- Auth Buttons Section ---------- */}
         <div className="flex items-center gap-4">
-
           <div className="flex items-center gap-4">
-            
-            {/* --- Sign In Button --- */}
-            <SignInButton>
-              <Button variant="outline">
-                Sign In
-              </Button>
-            </SignInButton>
+            <SignedOut>
+              <SignInButton>
+                <Button className="bg-transparent text-white/80 hover:text-white hover:bg-[#6c63fe] text-base">
+                  Login
+                </Button>
+              </SignInButton>
 
-            {/* --- Sign Up Button --- */}
-            <SignUpButton>
-              <Button variant="outline">
-                Sign Up
-              </Button>
-            </SignUpButton>
+              <SignUpButton>
+                <Button className="bg-white text-gray-900 hover:bg-[#6c63fe] hover:text-white text-base">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </SignedOut>
 
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
-
         </div>
-
       </div>
 
-
-      {/* -------------------- Hero Section -------------------- */}
+      {/* ============================================================
+          HERO SECTION
+      ============================================================ */}
       <div className="flex-col w-full h-auto bg-[#110f1c]">
-
-        {/* ---------- Spacer at Top of Hero Section ---------- */}
         <div className="w-full h-[150px]" />
 
-        {/* ---------- Headline / Hero Title ---------- */}
-        <h1
-          className={`${roboto.className} text-6xl font-bold text-center max-w-[50vw] leading-tight mx-auto`}
-        >
+        <h1 className={`${roboto.className} text-6xl font-bold text-center max-w-[50vw] leading-tight mx-auto`}>
           <span className="text-white">Find out</span>{' '}
           <span className="text-[#6c63fe]">
             how close you are to your Coding Goal
           </span>
         </h1>
 
-        {/* ---------- Space between text and image ---------- */}
         <div className="w-full h-[100px]" />
 
-        {/* ---------- Hero Image Container ---------- */}
         <div className="w-full h-[870px] overflow-hidden">
           <img
             src="/mainpageimage.svg"
@@ -112,13 +158,29 @@ export default function HomePage() {
             className="w-full h-auto block"
           />
         </div>
-
       </div>
 
+      {/* ============================================================
+          PARTICLE PLAYGROUND / REMINDER AREA
+      ============================================================ */}
+      <div className="h-[20px] w-full bg-black" />
 
-      {/* -------------------- Footer Spacer (or Future Section Placeholder) -------------------- */}
-      <div className="flex w-full h-[200px] bg-white" />
+      <div className={`h-[100px] w-full bg-red-700 flex items-center justify-center ${roboto.className}`}>
+        <h1 className="text-white text-2xl font-semibold text-center">
+          Particle Playground while you Procrastinate Logging In
+        </h1>
+      </div>
 
+      {/* ============================================================
+          PARTICLE BACKGROUND CANVAS
+      ============================================================ */}
+      <div className="relative h-[800px] w-full bg-red-700">
+        <div id="particles-js" className="absolute inset-0" />
+      </div>
+
+      {/* ============================================================
+          FOOTER SPACER / BOTTOM GAP
+      ============================================================ */}
     </>
   );
 }

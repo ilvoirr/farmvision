@@ -3,18 +3,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from '@clerk/nextjs'
-import { Poppins } from 'next/font/google'
-
-const poppins = Poppins({
-  weight: ['500', '600'],
-  subsets: ['latin'],
-})
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -32,7 +21,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-      <SignedIn><UserButton/></SignedIn><SignedOut></SignedOut>
+      <head>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
       <body className={`${inter.className} min-h-screen bg-white text-black`}>
         {children}
       </body>
