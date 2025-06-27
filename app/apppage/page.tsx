@@ -1,12 +1,85 @@
 "use client";
 
 import { UserButton, useUser } from '@clerk/nextjs';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
+import { roboto } from '../fonts';
+import { Poppins } from 'next/font/google';
+
+interface FormData {
+  expectations: string;
+  coded: string;
+}
 
 export default function AppPage() {
   const { user } = useUser();
   const triggerRef = useRef<HTMLDivElement>(null);
+  const [formData, setFormData] = useState<FormData>({ expectations: '', coded: '' });
+  const [savedData, setSavedData] = useState<FormData[]>([]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/api/coding-data', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': document.cookie
+          },
+          credentials: 'include', // Include cookies in the request
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setSavedData(data.data || []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
+
+  const handleExpectationsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, expectations: e.target.value }));
+  };
+
+  const handleCodedChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, coded: e.target.value }));
+  };
+
+  const [error, setError] = useState<string>('');
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setError(''); // Clear any previous errors
+
+    try {
+      const response = await fetch('/api/coding-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': document.cookie
+        },
+        credentials: 'include', // Include cookies in the request
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save data');
+      }
+
+      const data = await response.json();
+      setSavedData(data.data);
+      setFormData({ expectations: '', coded: '' });
+    } catch (error: any) {
+      console.error('Error saving data:', error);
+      setError(error.message || 'Failed to save data. Please try again.');
+    }
+  }
 
   if (!user) return null;
 
@@ -65,7 +138,42 @@ export default function AppPage() {
             </div>
           </div>
         </div>
-        
+        <div className="flex-col w-full h-[1000px] bg-red-200 p-8 space-y-8">
+          <div className="flex flex-col items-center space-y-4">
+            <h1 className={`${roboto.className} text-2xl font-bold text-center`}>Elabore Your Coding Expectations and Goals</h1>
+            <textarea
+              placeholder="I want to be a full stack developer and ......."
+              rows={3}
+              value={formData.expectations}
+              onChange={handleExpectationsChange}
+              className={roboto.className + ' w-full max-w-md px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 overflow-y-auto'}
+            />
+          </div>
+
+          <div className="flex flex-col items-center space-y-4">
+            <h1 className={`${roboto.className} text-2xl font-bold text-center`}>What Have You Coded?</h1>
+            <textarea
+              placeholder="HTML boilerplate 2 lines and ........"
+              rows={3}
+              value={formData.coded}
+              onChange={handleCodedChange}
+              className={roboto.className + ' w-full max-w-md px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-white border border-gray-300 rounded-xl shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 overflow-y-auto'}
+            />
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              onClick={handleSubmit}
+              className="mt-4 px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Enter
+            </button>
+            {error && (
+              <div className="mt-2 text-sm text-red-600">{error}</div>
+            )}
+          </div>
+        </div>
+
       </SignedIn>
 
       <SignedOut>

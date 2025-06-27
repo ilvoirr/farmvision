@@ -1,7 +1,7 @@
 "use client";
 
 // -------------------- Font and UI Imports --------------------
-import { roboto } from './fonts';
+import { roboto } from '../fonts';
 import { Poppins } from 'next/font/google';
 import { Button } from "@/components/ui/button";
 
@@ -86,7 +86,7 @@ export default function HomePage() {
       {/* ============================================================
           TOP NAVIGATION BAR
       ============================================================ */}
-      <div className="flex items-center h-[4.5vw] bg-[#110f1c] text-white px-8 shadow-sm">
+      <div className="flex items-center h-[4.5vw] bg-gray-50 text-white px-8 shadow-sm">
         <div className="w-[3vw]" />
 
         <svg
@@ -99,7 +99,7 @@ export default function HomePage() {
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-[#6c63fe]"
+          className="text-red-700"
         >
           <path d="M10 10.5 8 13l2 2.5" />
           <path d="m14 10.5 2 2.5-2 2.5" />
@@ -108,31 +108,33 @@ export default function HomePage() {
 
         <div className="w-[1vw]" />
 
-        <h1 className="text-[1.3vw] font-semibold tracking-tight text-white">
+        <h1 className="text-[1.3vw] font-semibold tracking-tight text-red-700">
           Code Progress Bar
         </h1>
-        <div className='w-[1vw]'/>
-<Link href="/red">
-          <Button className="bg-transparent text-white/80 hover:text-white hover:bg-[#6c63fe] text-base">
-            Light
+        <div className="w-[1vw]" />
+
+        <Link href="/">
+          <Button className="bg-transparent text-red-700 hover:text-white hover:bg-red-700 text-base">
+            Dark
           </Button>
         </Link>
-        <div className="w-[58vw]" />
 
-      
+
+        <div className="w-[55vw]" />
+
+       
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-4">
             <SignedOut>
-              
               <SignInButton>
-                <Button className="bg-transparent text-white/80 hover:text-white hover:bg-[#6c63fe] text-base">
+                <Button className="bg-transparent text-red-700 hover:text-white hover:bg-red-700 text-base">
                   Login
                 </Button>
               </SignInButton>
 
               <SignUpButton>
-                <Button className="bg-white text-gray-900 hover:bg-[#6c63fe] hover:text-white text-base">
+                <Button className="bg-red-700 text-white hover:bg-red-800 hover:text-white text-base">
                   Sign Up
                 </Button>
               </SignUpButton>
@@ -148,12 +150,12 @@ export default function HomePage() {
       {/* ============================================================
           HERO SECTION
       ============================================================ */}
-      <div className="flex-col w-full h-auto bg-[#110f1c]">
+      <div className="flex-col w-full h-auto bg-gray-50">
         <div className="w-full h-[150px]" />
 
         <h1 className={`${roboto.className} text-6xl font-bold text-center max-w-[50vw] leading-tight mx-auto`}>
-          <span className="text-white">Find out</span>{' '}
-          <span className="text-[#6c63fe]">
+          <span className="text-red-700">Find out</span>{' '}
+          <span className="text-red-700">
             how close you are to your Coding Goal
           </span>
         </h1>
@@ -162,7 +164,7 @@ export default function HomePage() {
 
         <div className="w-full h-[870px] overflow-hidden">
           <img
-            src="/purplemain.svg"
+            src="/red700main.svg"
             alt="Top cropped SVG"
             className="w-full h-auto block"
           />
