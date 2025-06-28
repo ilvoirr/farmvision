@@ -2,7 +2,6 @@
 
 // -------------------- Font and UI Imports --------------------
 import { roboto } from './fonts';
-import { Poppins } from 'next/font/google';
 import { Button } from "@/components/ui/button";
 
 // -------------------- React and Routing --------------------
@@ -22,11 +21,6 @@ import {
 // ============================================================
 //                    FONT CONFIGURATION
 // ============================================================
-
-const poppins = Poppins({
-  weight: ['500', '600'],
-  subsets: ['latin'],
-});
 
 // ============================================================
 //        REDIRECT LOGIC WHEN USER IS SIGNED IN (CLERK)
