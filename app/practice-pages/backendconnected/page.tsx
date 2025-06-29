@@ -3,7 +3,7 @@
 import { UserButton, useUser } from '@clerk/nextjs';
 import { useRef, useState, useEffect } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
-import { roboto } from '../fonts';
+import { roboto } from '../../fonts';
 import { Button } from "@/components/ui/button";
 
 

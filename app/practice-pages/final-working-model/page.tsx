@@ -4,7 +4,7 @@ import { UserButton, useUser } from '@clerk/nextjs';
 import { useRef, useState, useEffect } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { useRouter } from 'next/navigation';
-import { roboto } from '../fonts';
+import { roboto } from '../../fonts';
 import { Button } from "@/components/ui/button";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { TextAnimate } from '@/components/magicui/text-animate';

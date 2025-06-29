@@ -1,7 +1,7 @@
 "use client";
 
 // -------------------- Font and UI Imports --------------------
-import { roboto } from '../fonts';
+import { roboto } from '../../fonts';
 import { Button } from "@/components/ui/button";
 
 // -------------------- React and Routing --------------------
