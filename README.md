@@ -38,6 +38,7 @@ yarn install
 ```
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
 CLERK_SECRET_KEY=your_clerk_secret_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 4. Start the development server:
