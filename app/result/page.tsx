@@ -127,8 +127,8 @@ export default function ResultPage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <div className="text-xl text-red-600">Error: {error}</div>
         <button
-          onClick={() => router.push('/app')}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          onClick={() => router.push('/apppage')}
+          className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
         >
           Go Back
         </button>
