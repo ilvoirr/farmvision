@@ -6,6 +6,34 @@ import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 import { roboto } from '../fonts';
 import { Button } from "@/components/ui/button";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default function AppPage() {
     
   const { user } = useUser();
@@ -20,6 +48,7 @@ export default function AppPage() {
 
   // 🎯 Score state
   const [score, setScore] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<string>("");
   const [isLoadingScore, setIsLoadingScore] = useState(false);
   const [hasData, setHasData] = useState(false);
 
@@ -55,13 +84,18 @@ export default function AppPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ goal, code }),
+        body: JSON.stringify({ 
+          goal, 
+          code, 
+          userName: user?.firstName || user?.username || user?.fullName || 'Developer'
+        }),
       });
 
       const data = await response.json();
       
       if (response.ok) {
         setScore(data.score);
+        setFeedback(data.feedback || "");
       } else {
         console.error('Error getting score:', data.error);
       }
@@ -150,6 +184,26 @@ export default function AppPage() {
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
       <SignedIn>
@@ -199,6 +253,32 @@ export default function AppPage() {
           </div>
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div className="flex flex-col w-full bg-white p-8 space-y-16">
 
           {/* Score Display */}
@@ -212,13 +292,24 @@ export default function AppPage() {
                 {isLoadingScore ? (
                   <div className="text-white text-lg font-bold">...</div>
                 ) : (
-                  <div className="text-white text-5xl font-bold">
+                  <div className="text-red-200 text-5xl font-bold">
                     {score !== null ? score : "?"}
                   </div>
                 )}
               </div>
               <div className="h-[1vh]"/>
               <p className="text-gray-600 text-lg">Out of 100</p>
+              
+              {/* Feedback Message */}
+              {feedback && !isLoadingScore && (
+                <div className="mt-4 max-w-2xl text-center">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 shadow-sm">
+                    <p className="text-gray-800 text-lg font-medium leading-relaxed whitespace-pre-line">
+                      {feedback}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

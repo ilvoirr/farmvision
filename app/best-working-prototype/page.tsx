@@ -3,7 +3,6 @@
 import { UserButton, useUser } from '@clerk/nextjs';
 import { useRef, useState, useEffect } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
-import { useRouter } from 'next/navigation';
 import { roboto } from '../fonts';
 import { Button } from "@/components/ui/button";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
@@ -12,9 +11,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 export default function AppPage() {
   const { user, isLoaded } = useUser();
-  
-  if (!isLoaded || !user) return <div>Loading...</div>;
-  const router = useRouter();
   const triggerRef = useRef<HTMLDivElement>(null);
 
   const [goalText, setGoalText] = useState("");
@@ -24,39 +20,74 @@ export default function AppPage() {
   const [codeText, setCodeText] = useState("");
   const [codeSubmitted, setCodeSubmitted] = useState(false);
 
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [score, setScore] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<string>("");
+  const [isLoadingScore, setIsLoadingScore] = useState(false);
+  const [showScore, setShowScore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Remove the automatic navigation check
-  // useEffect(() => {
-  //   if (isLoaded && user) {
-  //     checkUserDataAndNavigate();
-  //   }
-  // }, [isLoaded, user]);
+  useEffect(() => {
+    if (isLoaded && user) {
+      checkUserDataAndGetScore();
+    }
+  }, [isLoaded, user]);
 
+  if (!isLoaded) return <div>Loading...</div>;
+  if (!user) return null;
 
+  const checkUserDataAndGetScore = async () => {
+    try {
+      const response = await fetch('/api/get-user-data');
+      if (!response.ok) throw new Error('Failed to fetch user data');
+      
+      const data = await response.json();
+      console.log('User data:', data);
+      
+      if (data.hasData) {
+        setGoalSubmitted(true);
+        setCodeSubmitted(true);
+        await getScore(data.goal, data.code);
+      }
+    } catch (error) {
+      console.error('Error checking user data:', error);
+      setError('Failed to load user data');
+    }
+  };
 
-  // Remove this function as we don't want automatic navigation
-  // const checkUserDataAndNavigate = async () => {
-  //   try {
-  //     const response = await fetch('/api/get-user-data');
-  //     if (!response.ok) throw new Error('Failed to fetch user data');
-  //     
-  //     const data = await response.json();
-  //     console.log('User data:', data);
-  //     
-  //     if (data.hasData) {
-  //       setIsNavigating(true);
-  //       // Smooth transition delay before navigation
-  //       setTimeout(() => {
-  //         router.push('/result');
-  //       }, 1000);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error checking user data:', error);
-  //     setError('Failed to load user data');
-  //   }
-  // };
+  const getScore = async (goal: string, code: string) => {
+    try {
+      setIsLoadingScore(true);
+      setError(null);
+      
+      const response = await fetch('/api/get-score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          goal, 
+          code, 
+          userName: user?.firstName || user?.username || 'Developer'
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get score');
+      }
+
+      const data = await response.json();
+      console.log('Score data:', data);
+      
+      setScore(data.score);
+      setFeedback(data.feedback || "No feedback provided");
+      setShowScore(true);
+    } catch (error) {
+      console.error('Error getting score:', error);
+      setError('Failed to get score and feedback');
+    } finally {
+      setIsLoadingScore(false);
+    }
+  };
 
   const handleGoalSubmit = async () => {
     if (goalSubmitted || isTransitioning || !goalText.trim()) return;
@@ -78,7 +109,7 @@ export default function AppPage() {
 
       if (!response.ok) {
         const result = await response.json();
-        throw new Error(result.error || 'Out of API requests for today');
+        throw new Error(result.error || 'Failed to save goal');
       }
 
       setTimeout(() => {
@@ -89,7 +120,7 @@ export default function AppPage() {
 
     } catch (error) {
       console.error('Error saving goal:', error);
-      setError(error instanceof Error ? error.message : 'Out of API requests for today');
+      setError(error instanceof Error ? error.message : 'Failed to save goal');
       setIsTransitioning(false);
     }
   };
@@ -114,24 +145,32 @@ export default function AppPage() {
 
       if (!response.ok) {
         const result = await response.json();
-        throw new Error(result.error || 'Out of API requests for today');
+        throw new Error(result.error || 'Failed to save code');
       }
 
-      // Start navigation process after successful code submission
-      // Only navigate when both goal and code have been submitted in this session
-      setIsNavigating(true);
+      const userDataResponse = await fetch('/api/get-user-data');
+      if (!userDataResponse.ok) throw new Error('Failed to fetch user data');
+      
+      const userData = await userDataResponse.json();
+      await getScore(userData.goal, userData.code);
+      
       setCodeText("");
-      
-      // Smooth transition delay before navigation
-      setTimeout(() => {
-        router.push('/result');
-      }, 1000);
-      
     } catch (error) {
       console.error('Error saving code:', error);
-      setError(error instanceof Error ? error.message : 'Out of API requests for today');
+      setError(error instanceof Error ? error.message : 'Failed to save code');
       setCodeSubmitted(false);
     }
+  };
+
+  const resetForm = () => {
+    setGoalSubmitted(false);
+    setCodeSubmitted(false);
+    setShowScore(false);
+    setScore(null);
+    setFeedback("");
+    setGoalText("");
+    setCodeText("");
+    setError(null);
   };
 
   return (
@@ -195,16 +234,44 @@ export default function AppPage() {
                   </div>
                 )}
 
-                {/* Navigation Loading State */}
-                {isNavigating ? (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center"
-                  >
+                {/* Show Score - Simple Version */}
+                {showScore && score !== null ? (
+                  <div className="flex flex-col items-center max-w-4xl bg-white rounded-lg shadow-lg p-8 border">
+                    <h2 className="text-4xl font-bold text-black mb-6">Your Score</h2>
+                    
+                    <div className="text-8xl font-bold text-purple-600 mb-4">
+                      {score}/10
+                    </div>
+                    
+                    <div className="w-full bg-gray-200 rounded-full h-4 mb-8 max-w-md">
+                      <div 
+                        className="bg-gradient-to-r from-purple-600 to-pink-500 h-4 rounded-full transition-all duration-1000"
+                        style={{ width: `${(score || 0) * 10}%` }}
+                      />
+                    </div>
+
+                    {feedback && (
+                      <div className="w-full max-w-3xl">
+                        <h3 className="text-2xl font-semibold text-black mb-4">Feedback</h3>
+                        <div className="bg-gray-50 rounded-lg p-6 text-gray-700 text-left whitespace-pre-wrap">
+                          {feedback}
+                        </div>
+                      </div>
+                    )}
+
+                    <Button
+                      onClick={resetForm}
+                      className="mt-8 px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      Start New Evaluation
+                    </Button>
+                  </div>
+                ) : isLoadingScore ? (
+                  /* Loading */
+                  <div className="flex flex-col items-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mb-4"></div>
-                    <p className="text-lg text-gray-600">Preparing your results...</p>
-                  </motion.div>
+                    <p className="text-lg text-gray-600">Analyzing your code...</p>
+                  </div>
                 ) : (
                   /* Input Forms */
                   <div className="flex flex-col items-center">
@@ -248,7 +315,7 @@ export default function AppPage() {
                             by="word"
                             animation="slideDown"
                             duration={0.6}
-                            className="text-2xl md:text-3xl lg:text-4xl font-bold text-purple-600 dark:text-white mb-4"
+                            className="text-2xl md:text-3xl lg:text-4xl font-bold text-black dark:text-white mb-4"
                             startOnView={false}
                           >
                             What code have you written?
@@ -258,7 +325,7 @@ export default function AppPage() {
                             animation="fadeIn"
                             duration={0.6}
                             delay={0.2}
-                            className="text-lg md:text-xl text-black dark:text-purple-400 font-medium"
+                            className="text-lg md:text-xl text-purple-600 dark:text-purple-400 font-medium"
                             startOnView={false}
                           >
                             share your existing code or progress
@@ -267,24 +334,18 @@ export default function AppPage() {
                       )}
                     </AnimatePresence>
 
-                    <div className="h-[4vh]" />
-
                     <div className={`transition-all duration-800 ${codeSubmitted ? 'blur-md opacity-50 pointer-events-none' : ''}`}>
                       <textarea
                         value={goalSubmitted ? codeText : goalText}
                         onChange={(e) => goalSubmitted ? setCodeText(e.target.value) : setGoalText(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            goalSubmitted ? handleCodeSubmit() : handleGoalSubmit();
-                          }
-                        }}
                         placeholder={
                           goalSubmitted 
-                            ? "Paste your code here or describe what you've built/plan to build so far..." 
+                            ? "Paste your code here or describe what you've built so far..." 
                             : "I want to build a Collaboration Dashboard with ....."
                         }
-                        className="w-[1000px] p-3 rounded-md border text-black border-gray-300 hover:border-purple-600 resize-none min-h-[6rem] focus:outline-none transition-colors duration-200 bg-white"
+                        className={`w-[1000px] p-3 rounded-md border text-black border-gray-300 hover:border-purple-600 resize-none min-h-[6rem] focus:outline-none transition-colors duration-200 ${
+                          goalSubmitted ? "bg-gray-200" : "bg-white"
+                        }`}
                         disabled={codeSubmitted}
                       />
                       <div className='h-[2vh]'/>

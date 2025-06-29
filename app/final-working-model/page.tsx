@@ -281,7 +281,7 @@ export default function AppPage() {
                         }}
                         placeholder={
                           goalSubmitted 
-                            ? "Paste your code here or describe what you've built/plan to build so far..." 
+                            ? "Paste your code here or describe what you've built so far..." 
                             : "I want to build a Collaboration Dashboard with ....."
                         }
                         className="w-[1000px] p-3 rounded-md border text-black border-gray-300 hover:border-purple-600 resize-none min-h-[6rem] focus:outline-none transition-colors duration-200 bg-white"
