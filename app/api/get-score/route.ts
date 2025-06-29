@@ -42,26 +42,40 @@ export async function POST(req: Request) {
             {
               parts: [
                 {
-                  text: `You are an expert programming mentor speaking directly to a developer named ${userName || 'there'}. You will evaluate how well their code aligns with achieving their goal on a scale of 1-100, and provide personalized feedback.
+                  text: `You are an expert programming mentor evaluating how well the provided code aligns with the stated goal. Focus ONLY on goal alignment, not goal ambition.
+
+SCORING GUIDELINES (ALIGNMENT-BASED):
+- 90-100: Code perfectly or nearly perfectly achieves the stated goal
+- 70-89: Code achieves most of the goal with minor gaps or improvements needed
+- 50-69: Code partially achieves the goal but missing significant functionality
+- 30-49: Code shows some progress toward the goal but major components missing
+- 10-29: Code barely relates to the goal or has major functionality gaps
+- 1-9: Code is completely unrelated to the goal or non-functional
+
+EXAMPLES:
+- Goal: "Print hello world" + Code: console.log("hello world") = 100 (perfect alignment)
+- Goal: "Create a simple calculator" + Code: basic calc with +,-,*,/ = 95 (great alignment)
+- Goal: "Build the next Facebook" + Code: basic login form = 15 (huge alignment gap)
+- Goal: "Write #include <iostream>" + Code: #include <iostream> = 100 (perfect match)
+
+Ignore how simple or ambitious the goal is. Only evaluate: Does the code achieve what they said they wanted to do?
 
 Your response must be in this EXACT format:
 SCORE: [number from 1-100]
-CONGRATULATIONS: [exactly 2-3 sentences of warm, personal congratulations using their name, celebrating their effort and progress]
-ADVICE: [exactly 4 sentences of specific, actionable advice on how to improve their code and increase their alignment score - be constructive and encouraging]
-
-Be generous with scoring - if the code shows good effort and relevant skills, lean towards higher scores. Make all feedback feel personal and encouraging.
+CONGRATULATIONS: [exactly 2-3 sentences celebrating their progress toward their specific goal]
+ADVICE: [exactly 4 sentences of specific, actionable advice on how to better achieve their stated goal]
 
 DEVELOPER: ${userName || 'Developer'}
 GOAL: ${goal}
 CODE: ${code}
 
-Evaluate the alignment and provide your personalized response:`
+Evaluate the alignment between goal and code. Be strict about alignment, but don't penalize simple goals.`
                 }
               ]
             }
           ],
           generationConfig: {
-            temperature: 0.4,
+            temperature: 0.3,
             maxOutputTokens: 400,
           }
         }),
@@ -96,38 +110,26 @@ Evaluate the alignment and provide your personalized response:`
     let rawScore = parseInt(scoreMatch[1]);
     const congratulations = congratulationsMatch 
       ? congratulationsMatch[1].trim() 
-      : `Congratulations ${userName || 'there'}! You're making excellent progress on your coding journey. Your dedication and effort really show in your work!`;
+      : `Great work ${userName || 'there'}! You're making solid progress toward your goal. Keep building on what you've started!`;
     
     const advice = adviceMatch 
       ? adviceMatch[1].trim() 
-      : `To improve your score, focus on aligning your code more closely with your stated goals. Consider breaking down your goal into smaller, specific features and implement them step by step. Add more comments to explain your logic and make your code more readable. Don't forget to test your functionality to ensure it works as expected.`;
+      : `To better align with your goal, focus on implementing the specific features you mentioned. Break down your goal into smaller tasks and tackle them one by one. Test each piece of functionality to ensure it works as expected. Consider adding error handling and edge cases to make your implementation more robust.`;
 
     if (isNaN(rawScore) || rawScore < 1 || rawScore > 100) {
       console.error('Invalid score from AI:', rawScore);
       return NextResponse.json({ error: 'Invalid score received' }, { status: 500 });
     }
 
-    // Apply lenient scoring transformation
+    // REMOVED the lenient scoring transformation - use raw score directly
     let adjustedScore = rawScore;
-    
-    if (rawScore >= 75) {
-      // Map 75-100 to 90-100 (more generous in the high range)
-      adjustedScore = Math.round(90 + ((rawScore - 75) / 25) * 10);
-    } else if (rawScore >= 60) {
-      // Map 60-74 to 80-89
-      adjustedScore = Math.round(80 + ((rawScore - 60) / 14) * 9);
-    } else if (rawScore >= 40) {
-      // Map 40-59 to 65-79
-      adjustedScore = Math.round(65 + ((rawScore - 40) / 19) * 14);
-    } else {
-      // Map 1-39 to 40-64 (still encouraging for low scores)
-      adjustedScore = Math.round(40 + ((rawScore - 1) / 38) * 24);
+
+    // Only apply minimal adjustment for very low scores to keep them encouraging but realistic
+    if (rawScore < 10) {
+      adjustedScore = Math.max(5, rawScore); // Minimum score of 5 to not completely crush spirits
     }
 
-    // Ensure we don't exceed 100
-    adjustedScore = Math.min(100, adjustedScore);
-
-    console.log('Score transformation:', { rawScore, adjustedScore });
+    console.log('Score (no artificial inflation):', { rawScore, adjustedScore });
 
     return NextResponse.json({ 
       score: adjustedScore,
