@@ -139,3 +139,12 @@
   }
 
 }
+
+/* app/globals.css or styles/globals.css */
+
+@media (min-width: 1300px) and (max-width: 1400px) {
+  .around-1366 {
+    font-size: 4vw;/* Or whatever style */
+    
+  }
+}
