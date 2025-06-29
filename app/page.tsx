@@ -50,7 +50,7 @@ function RedirectToApp({ router }: { router: ReturnType<typeof useRouter> }) {
 //                   DESKTOP VERSION COMPONENT
 // ============================================================
 
-export function HomePageDesktop() {
+function HomePageDesktop() {
   const router = useRouter();
 
   // Initialize particles.js on mount
@@ -217,7 +217,7 @@ export function HomePageDesktop() {
 //                   MOBILE VERSION COMPONENT
 // ============================================================
 
-export function HomePageMobile() {
+function HomePageMobile() {
   const router = useRouter();
 
   // Initialize particles.js on mount
