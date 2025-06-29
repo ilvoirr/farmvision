@@ -1,5 +1,12 @@
 "use client";
 
+// -------------------- Type Declarations --------------------
+declare global {
+  interface Window {
+    particlesJS: any;
+  }
+}
+
 // -------------------- Font and UI Imports --------------------
 import { roboto } from '../fonts';
 import { Button } from "@/components/ui/button";
@@ -124,7 +131,7 @@ function HomePageDesktop() {
         <div className='w-[1vw]'/>
         
         {/* Light theme button - hidden on mobile */}
-        <Link href="/red">
+        <Link href="/">
           <Button className="hidden md:inline-flex bg-transparent text-red-700 hover:text-white hover:bg-red-700 text-[1.77vh]">
             Dark
           </Button>

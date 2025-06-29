@@ -1,5 +1,12 @@
 "use client";
 
+// -------------------- Type Declarations --------------------
+declare global {
+  interface Window {
+    particlesJS: any;
+  }
+}
+
 // -------------------- Font and UI Imports --------------------
 import { roboto } from './fonts';
 import { Button } from "@/components/ui/button";
