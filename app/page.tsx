@@ -150,7 +150,7 @@ function HomePageDesktop() {
               </Button>
             </SignInButton>
             <SignUpButton>
-              <Button className="only-1366 bg-white text-gray-900 md:w-[5.75vw] w-[25vw] hover:bg-[#6c63fe] hover:text-white md:text-[1.7vh] text-[4vw]">
+              <Button className="only-1366 bg-white text-gray-900 md:w-[5.75vw] w-[25vw] hover:bg-[#6c63fe] hover:text-white md:text-[1vh] text-[4vw]">
                 Sign Up
               </Button>
             </SignUpButton>
