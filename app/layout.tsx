@@ -9,8 +9,8 @@ import {
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'My App',
-  description: 'A clean starter layout',
+  title: 'Code Progress Bar',
+  description: 'Track your coding journey visually with Code Progress Bar – a simple, elegant app that lets developers monitor their project progress, stay motivated, and hit milestones faster.',
 }
 
 export default function RootLayout({
