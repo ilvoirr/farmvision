@@ -1,3 +1,6 @@
+project link - https://varun-sivanesan-code-progress-bar.vercel.app/ 
+
+
 # Code Progress Bar
 
 Code Progress Analyzer is a sophisticated web application designed to help developers measure their progress in aligning their code with specific goals. It provides real-time feedback and visualizations to help users improve their coding practices and achieve their objectives.
