@@ -138,7 +138,7 @@ function HomePageDesktop() {
         </Link>
 
         {/* Center spacing to push auth buttons to the right */}
-        <div className="w-[25vw] md:w-[102.85vh]" />
+        <div className="w-[25vw] md:w-[98.85vh]" />
 
         {/* Authentication buttons section */}
         <div className="flex items-center gap-4">
