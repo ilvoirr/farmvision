@@ -138,19 +138,19 @@ function HomePageDesktop() {
         </Link>
 
         {/* Center spacing to push auth buttons to the right */}
-        <div className="w-[25vw] md:w-[98.85vh]" />
+        <div className="w-[25vw] md:w-[102.85vh]" />
 
         {/* Authentication buttons section */}
         <div className="flex items-center gap-4">
           {/* Show login/signup when user is signed out */}
           <SignedOut>
             <SignInButton>
-              <Button className="only-1366 bg-transparent text-white/80 hover:text-white hover:bg-[#6c63fe] md:text-[1.77vh] text-[4vw]">
+              <Button className="only-1366 bg-transparent text-white/80 hover:text-white hover:bg-[#6c63fe] md:text-[1.7vh] text-[4vw]">
                 Login
               </Button>
             </SignInButton>
             <SignUpButton>
-              <Button className="only-1366 bg-white text-gray-900 md:w-[5.75vw] w-[25vw] hover:bg-[#6c63fe] hover:text-white md:text-[1.77vh] text-[4vw]">
+              <Button className="only-1366 bg-white text-gray-900 md:w-[5.75vw] w-[25vw] hover:bg-[#6c63fe] hover:text-white md:text-[1.7vh] text-[4vw]">
                 Sign Up
               </Button>
             </SignUpButton>
