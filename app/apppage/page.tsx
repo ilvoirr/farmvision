@@ -168,7 +168,7 @@ export default function AppPage() {
 
   return (
     <>
-      <SignedIn>
+      
         <div className="min-h-screen flex flex-col">
           {/* Navbar - same as before */}
           <div className="flex items-center h-[9.5vh] bg-gray-100 px-8 shadow-sm">
@@ -358,11 +358,6 @@ export default function AppPage() {
             </div>
           </div>
         </div>
-      </SignedIn>
-
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
+     </>
   );
 }
