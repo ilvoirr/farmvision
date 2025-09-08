@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
       try {
         // Send to Python model
-        const modelResponse = await fetch('http://localhost:8000/predict', {
+        const modelResponse = await fetch('farmvision-backend-production.up.railway.app', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
