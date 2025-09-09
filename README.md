@@ -1,116 +1,154 @@
-# FarmVision
+# FarmVision - Local Development Setup
 
-FarmVision is an AI-powered chat application designed to assist users with agricultural queries through text and image-based interactions. The application features a modern, responsive interface with support for multiple languages and image recognition capabilities powered by Google's Gemini AI.
+FarmVision is an AI-powered chat application designed to assist users with agricultural queries through text and image-based interactions. This guide will help you set up the FarmVision frontend for local development.
 
-### Key Features
+## Prerequisites
 
-- **AI-Powered Chat**: Interactive chat interface with natural language processing
-- **Image Recognition**: Upload images for AI analysis and get insights
-- **Multilingual Support**: Switch between English and Hindi for a localized experience
-- **Real-time Typing Indicators**: Visual feedback when the AI is responding
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **User Authentication**: Secure login and user management using Clerk
+1. **Node.js & npm**
+   - Download and install Node.js (LTS version recommended) from [nodejs.org](https://nodejs.org/)
+   - Verify installation:
+     ```bash
+     node --version
+     npm --version
+     ```
 
-### Technology Stack
+2. **Git**
+   - Install Git from [git-scm.com](https://git-scm.com/)
+   - Verify installation: `git --version`
 
-- **Next.js 14**: Modern React framework for server-side rendering
-- **TypeScript**: For type-safe development
-- **React**: Core UI library
-- **Clerk Authentication**: For secure user management
-- **Google Gemini AI**: For natural language processing and image recognition
-- **Tailwind CSS**: For styling and responsive design
-- **Particles.js**: For interactive background effects
+3. **Text Editor**
+   - Recommended: [VS Code](https://code.visualstudio.com/)
 
-### Getting Started
+## Local Setup Instructions
 
-1. First, clone the repository to your local machine:
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/yourusername/farmvision.git
+git clone https://github.com/ilvoirr/farmvision.git
 cd farmvision
 ```
 
-2. Install all necessary dependencies:
+### 2. Install Dependencies
+
 ```bash
+# Using npm
 npm install
-# or
-yarn install
+
+# OR using yarn (if you have yarn installed)
+# yarn install
 ```
 
-3. Set up your environment variables by creating a `.env` file:
-```
+### 3. Environment Variables Setup
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```env
+# Required for Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
 CLERK_SECRET_KEY=your_clerk_secret_key_here
-GEMINI_API_KEY=your_gemini_api_key_here
+
+# Required for Google Gemini AI
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+
+# Optional: Set development port (default: 3000)
+PORT=3000
 ```
 
-4. Start the development server:
+### 4. Obtaining API Keys
+
+#### Google Gemini API Key
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Create a new API key
+4. Copy the key and paste it in your `.env.local` file
+
+#### Clerk Authentication
+1. Sign up at [Clerk.dev](https://clerk.dev/)
+2. Create a new application
+3. Copy your publishable and secret keys to the `.env.local` file
+
+### 5. Start the Development Server
+
 ```bash
 npm run dev
 # or
 yarn dev
 ```
 
-5. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
-### Project Structure
+## Project Structure
 
 The project follows a clean and organized structure:
 
 ```
-app/
-├── api/              # API routes for Gemini integration
-├── apppage/          # Main application page
-├── fonts.ts          # Font configurations
-└── layout.tsx        # Root layout component
-components/          # Reusable React components
-public/              # Static assets like images
-lib/                 # Utility functions and configurations
+farmvision/
+├── app/                # Next.js app directory
+│   ├── api/            # API routes
+│   ├── apppage/        # Main application pages
+│   └── ...
+├── components/         # Reusable React components
+│   ├── ui/             # UI components
+│   └── ...
+├── public/             # Static files
+├── lib/                # Utility functions
+└── ...
 ```
 
-### Key Components
+## Common Issues & Solutions
 
-- **Chat Interface**: Interactive chat window with message history
-- **Image Upload**: Drag-and-drop or click-to-upload image functionality
-- **Language Toggle**: Switch between English and Hindi
-- **Typing Indicators**: Visual feedback during AI response generation
-- **Responsive Layout**: Adapts to different screen sizes
+1. **Port Already in Use**
+   ```bash
+   # Find the process using port 3000
+   lsof -i :3000
+   # Kill the process
+   kill -9 <PID>
+   ```
 
-### API Endpoints
+2. **Environment Variables Not Loading**
+   - Ensure the file is named exactly `.env.local`
+   - Restart your development server after making changes
+   - Check for typos in variable names
 
-The application uses the following API endpoints:
+3. **Module Not Found**
+   ```bash
+   # Delete node_modules and reinstall
+   rm -rf node_modules
+   npm install
+   ```
 
-- **/api/gemini**: Handles both text and image-based queries
-- **/api/elevation**: (Planned) For elevation data related to farming
-- **/api/location**: (Planned) For location-based services
+## Development Workflow
 
-### Contributing
+1. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-We welcome contributions to FarmVision! Here's how to get started:
+2. Make your changes and test locally
 
-1. Fork the repository on GitHub
-2. Create a new feature branch:
-```bash
-git checkout -b feature/your-feature-name
-```
-3. Make your changes and commit them:
-```bash
-git commit -m 'Add your feature description'
-```
-4. Push to your branch and create a Pull Request
+3. Run linter:
+   ```bash
+   npm run lint
+   ```
 
-### License
+4. Commit your changes:
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   ```
+
+5. Push to GitHub:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+## Need Help?
+
+If you encounter any issues during setup, please:
+1. Check the [GitHub Issues](https://github.com/ilvoirr/farmvision/issues) page
+2. Create a new issue if your problem isn't listed
+3. Include error messages and steps to reproduce the issue
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-4. Push your changes to your fork:
-```bash
-git push origin feature/your-feature-name
-```
-5. Create a Pull Request on the main repository
-
-### License
-
-This project is licensed under the MIT License - see the LICENSE file for details
-
-### Support
-
-For support, please open an issue in the GitHub repository or contact the maintainers directly
