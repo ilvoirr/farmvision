@@ -3,7 +3,7 @@
 import { UserButton, useUser } from '@clerk/nextjs';
 import { useState, type KeyboardEvent, useCallback } from 'react';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
-import { Sidebar, SidebarBody, SidebarLink } from "../../components/ui/sidebar";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
   IconBrandTabler,
