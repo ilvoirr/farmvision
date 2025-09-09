@@ -1,18 +1,15 @@
-project link - https://varun-sivanesan-code-progress-bar.vercel.app/ 
+# FarmVision
 
-
-# Code Progress Bar
-
-Code Progress Analyzer is a sophisticated web application designed to help developers measure their progress in aligning their code with specific goals. It provides real-time feedback and visualizations to help users improve their coding practices and achieve their objectives.
+FarmVision is an AI-powered chat application designed to assist users with agricultural queries through text and image-based interactions. The application features a modern, responsive interface with support for multiple languages and image recognition capabilities powered by Google's Gemini AI.
 
 ### Key Features
 
-- **Progress Visualization**: An animated progress bar that shows how well your code aligns with your goals
-- **Score Calculation**: Dynamic scoring system that evaluates code quality and alignment
-- **Interactive UI**: Smooth animations and transitions for a better user experience
-- **Responsive Design**: Works perfectly on all devices
+- **AI-Powered Chat**: Interactive chat interface with natural language processing
+- **Image Recognition**: Upload images for AI analysis and get insights
+- **Multilingual Support**: Switch between English and Hindi for a localized experience
+- **Real-time Typing Indicators**: Visual feedback when the AI is responding
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **User Authentication**: Secure login and user management using Clerk
-- **Real-time Feedback**: Instant advice and recommendations based on your code
 
 ### Technology Stack
 
@@ -20,14 +17,16 @@ Code Progress Analyzer is a sophisticated web application designed to help devel
 - **TypeScript**: For type-safe development
 - **React**: Core UI library
 - **Clerk Authentication**: For secure user management
+- **Google Gemini AI**: For natural language processing and image recognition
 - **Tailwind CSS**: For styling and responsive design
-- **Custom UI Components**: Built with React and Tailwind
+- **Particles.js**: For interactive background effects
 
 ### Getting Started
 
 1. First, clone the repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/code-progress-analyzer.git
+git clone https://github.com/yourusername/farmvision.git
+cd farmvision
 ```
 
 2. Install all necessary dependencies:
@@ -39,11 +38,9 @@ yarn install
 
 3. Set up your environment variables by creating a `.env` file:
 ```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
-CLERK_SECRET_KEY=your_clerk_secret_here
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key_here
+CLERK_SECRET_KEY=your_clerk_secret_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
-SUPABASE_URL=your_supabase_url_here
-SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```
 
 4. Start the development server:
@@ -60,34 +57,35 @@ yarn dev
 The project follows a clean and organized structure:
 
 ```
-src/
-├── app/              # Main application routes and pages
-├── components/       # Reusable React components
-├── lib/             # Utility functions and configurations
-├── public/          # Static assets like images and fonts
-└── data/            # Application data and configurations
+app/
+├── api/              # API routes for Gemini integration
+├── apppage/          # Main application page
+├── fonts.ts          # Font configurations
+└── layout.tsx        # Root layout component
+components/          # Reusable React components
+public/              # Static assets like images
+lib/                 # Utility functions and configurations
 ```
 
 ### Key Components
 
-- **NumberTicker**: A custom component that animates number changes smoothly
-- **Confetti**: Adds celebratory visual effects for milestone achievements
-- **HyperText**: Interactive text component with dynamic styling
-- **ResultPage**: The main visualization page that shows progress
-- **AppPage**: User interface for code input and goal setting
+- **Chat Interface**: Interactive chat window with message history
+- **Image Upload**: Drag-and-drop or click-to-upload image functionality
+- **Language Toggle**: Switch between English and Hindi
+- **Typing Indicators**: Visual feedback during AI response generation
+- **Responsive Layout**: Adapts to different screen sizes
 
 ### API Endpoints
 
-The application uses several API endpoints to handle data:
+The application uses the following API endpoints:
 
-- **/api/get-score**: Calculates the alignment score based on user's code
-- **/api/get-user-data**: Retrieves user's goals and code data
-- **/api/save-data**: Saves user's progress and code submissions
-- **/api/update-profile**: Updates user's profile information
+- **/api/gemini**: Handles both text and image-based queries
+- **/api/elevation**: (Planned) For elevation data related to farming
+- **/api/location**: (Planned) For location-based services
 
 ### Contributing
 
-We welcome contributions from the community! Here's how to get started:
+We welcome contributions to FarmVision! Here's how to get started:
 
 1. Fork the repository on GitHub
 2. Create a new feature branch:
@@ -98,6 +96,11 @@ git checkout -b feature/your-feature-name
 ```bash
 git commit -m 'Add your feature description'
 ```
+4. Push to your branch and create a Pull Request
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 4. Push your changes to your fork:
 ```bash
 git push origin feature/your-feature-name
