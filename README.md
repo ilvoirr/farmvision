@@ -1,3 +1,5 @@
+[![Watch International Innovation Challenge '25 Project](https://img.youtube.com/vi/t7pJeUgLsvU/hqdefault.jpg)](https://youtu.be/t7pJeUgLsvU)
+
 # FarmVision - Local Development Setup
 
 FarmVision is an AI-powered chat application designed to assist users with agricultural queries through text and image-based interactions. This guide will help you set up the FarmVision frontend for local development.
